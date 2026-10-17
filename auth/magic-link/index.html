@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <title>Coin — Redirecting…</title>
+</head>
+<body style="background:#070b14;">
+  <script>
+    // /auth/magic-link/ — path-based entry for Supabase email links. Relays to the
+    // shared /auth/ handler with ?flow=magic-link, preserving BOTH the query string
+    // (token_hash, type, error…) and the token hash (#access_token=…).
+    var q = new URLSearchParams(location.search || '');
+    q.set('flow', 'magic-link');
+    location.replace('/auth/?' + q.toString() + (location.hash || ''));
+  </script>
+  <noscript><p style="color:#f3f4f6;font-family:system-ui;text-align:center;padding:40px">Please enable JavaScript, or open <a style="color:#fbbf24" href="/auth/">coins.erezults.com/auth</a>.</p></noscript>
+</body>
+</html>

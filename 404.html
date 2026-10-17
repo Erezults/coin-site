@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-title-he="הדף לא נמצא — Coin" data-title-en="Page not found — Coin">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>הדף לא נמצא — Coin</title>
+  <link rel="icon" type="image/png" href="/images/app-icon.png">
+  <link rel="stylesheet" href="/assets/site.css">
+  <style>
+    body { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .bg { position: fixed; inset: 0; background: radial-gradient(ellipse 70% 50% at 30% 20%, rgba(247,147,26,0.12), transparent), radial-gradient(ellipse 60% 40% at 70% 80%, rgba(96,165,250,0.08), transparent); }
+    .card { position: relative; text-align: center; max-width: 480px; }
+    .code { font-size: clamp(96px, 20vw, 160px); font-weight: 900; line-height: 1; letter-spacing: -0.04em; }
+    h1 { font-size: 26px; font-weight: 800; margin: 16px 0 12px; }
+    p { color: var(--text-secondary); font-size: 15px; margin-bottom: 32px; }
+    .actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .lang { margin-top: 26px; display: inline-flex; }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <main class="card" id="main-content">
+    <div class="code gradient" aria-hidden="true">404</div>
+    <h1 data-he="הדף לא נמצא" data-en="Page not found">הדף לא נמצא</h1>
+    <p data-he="הדף שחיפשתם לא קיים או שהועבר." data-en="The page you're looking for doesn't exist or has moved.">הדף שחיפשתם לא קיים או שהועבר.</p>
+    <div class="actions">
+      <a href="/" class="btn-primary" data-he="חזרה ל-Coin" data-en="Back to Coin">חזרה ל-Coin</a>
+      <a href="/support.html" class="btn-ghost" data-he="תמיכה" data-en="Support">תמיכה</a>
+    </div>
+    <div class="header-lang lang" role="group" aria-label="Language / שפה">
+      <button type="button" data-set-lang="he" aria-pressed="true" lang="he">עברית</button>
+      <button type="button" data-set-lang="en" aria-pressed="false" lang="en">English</button>
+    </div>
+  </main>
+  <script src="/assets/site.js"></script>
+  <script src="/a11y.js" defer></script>
+</body>
+</html>

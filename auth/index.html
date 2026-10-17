@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <title>Coin — Account</title>
+  <link rel="icon" type="image/png" href="/images/app-icon.png">
+  <link rel="stylesheet" href="/assets/site.css">
+  <style>
+    body {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px;
+      background-image: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(247,147,26,0.16), transparent), radial-gradient(ellipse 50% 40% at 80% 90%, rgba(96,165,250,0.08), transparent);
+      background-attachment: fixed;
+    }
+    .card { width: 100%; max-width: 440px; background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: 24px; padding: 40px 32px; text-align: center; box-shadow: 0 30px 80px rgba(0,0,0,0.45); }
+    .logo { width: 64px; height: 64px; border-radius: 16px; margin: 0 auto 22px; display: block; box-shadow: 0 0 30px var(--gold-glow); }
+    .icon { font-size: 46px; line-height: 1; margin-bottom: 18px; }
+    h1 { font-weight: 800; font-size: 24px; letter-spacing: -0.02em; margin-bottom: 12px; }
+    p { color: var(--text-secondary); font-size: 15px; line-height: 1.65; margin-bottom: 8px; }
+    p.sub { font-size: 13.5px; color: var(--text-muted); margin-top: 6px; }
+    .field { text-align: start; margin: 14px 0; }
+    .field label { display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 7px; }
+    .field input { width: 100%; background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: 12px; padding: 14px 16px; color: var(--text); font: 15px var(--font); }
+    .field input:focus { outline: none; border-color: var(--gold); }
+    .hint { font-size: 12.5px; color: var(--text-muted); margin-top: 6px; text-align: start; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; width: 100%; background: var(--text); color: var(--bg-deep); padding: 15px 24px; border-radius: 14px; text-decoration: none; border: none; cursor: pointer; font: 700 15px var(--font); margin-top: 18px; transition: transform .2s, opacity .2s; }
+    .btn:hover { transform: translateY(-1px); }
+    .btn:disabled { opacity: 0.55; cursor: default; transform: none; }
+    .btn-ghost { background: var(--bg-glass); color: var(--text-secondary); border: 1px solid var(--border-glass); margin-top: 12px; }
+    .btn-ghost:hover { color: var(--text); border-color: var(--gold); }
+    .err { color: var(--danger); font-size: 13.5px; margin-top: 14px; min-height: 18px; }
+    .spinner { width: 34px; height: 34px; border: 3px solid var(--border-glass); border-top-color: var(--gold-bright); border-radius: 50%; margin: 8px auto 20px; animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .lang { display: inline-flex; margin-top: 26px; }
+    .home { display: block; margin-top: 18px; color: var(--text-muted); font-size: 13px; text-decoration: none; }
+    .home:hover { color: var(--text-secondary); }
+  </style>
+</head>
+<body>
+  <main class="card" id="main-content">
+    <img src="/images/app-icon.png" alt="Coin" class="logo" width="64" height="64">
+
+    <div id="state-loading" role="status">
+      <div class="spinner" aria-hidden="true"></div>
+      <h1 data-t="verifyingTitle">מאמתים…</h1>
+      <p data-t="verifyingBody">רק רגע, בודקים את הקישור.</p>
+    </div>
+
+    <div id="state-confirmed" hidden>
+      <div class="icon" aria-hidden="true">✅</div>
+      <h1 data-t="confirmedTitle">האימייל אומת!</h1>
+      <p data-t="confirmedBody">החשבון שלך מוכן. חזרו לאפליקציית Coin והתחברו.</p>
+      <a class="btn open-app" href="#" hidden data-t="openApp">פתיחת Coin</a>
+      <a class="btn btn-ghost store" href="#" data-t="getApp">Coin ב-App Store</a>
+    </div>
+
+    <div id="state-recovery" hidden>
+      <div class="icon" aria-hidden="true">🔑</div>
+      <h1 data-t="recoveryTitle">בחירת סיסמה חדשה</h1>
+      <p data-t="recoveryBody">הזינו סיסמה חדשה לחשבון Coin שלכם.</p>
+      <form id="pw-form" novalidate>
+        <div class="field">
+          <label for="pw1" data-t="newPasswordLabel">סיסמה חדשה</label>
+          <input id="pw1" type="password" autocomplete="new-password" required aria-describedby="pw-hint">
+          <div class="hint" id="pw-hint" data-t="passwordHint">לפחות 8 תווים, עם אות גדולה, אות קטנה, מספר ותו מיוחד.</div>
+        </div>
+        <div class="field">
+          <label for="pw2" data-t="confirmPasswordLabel">אימות סיסמה</label>
+          <input id="pw2" type="password" autocomplete="new-password" required>
+        </div>
+        <div class="err" id="recovery-err" role="alert"></div>
+        <button class="btn" id="set-password-btn" type="submit" data-t="setPassword">עדכון סיסמה</button>
+      </form>
+    </div>
+
+    <div id="state-recovery-done" hidden>
+      <div class="icon" aria-hidden="true">✅</div>
+      <h1 data-t="recoveryDoneTitle">הסיסמה עודכנה!</h1>
+      <p data-t="recoveryDoneBody">חזרו לאפליקציית Coin והתחברו עם הסיסמה החדשה.</p>
+      <a class="btn open-app" href="#" hidden data-t="openApp">פתיחת Coin</a>
+      <a class="btn btn-ghost store" href="#" data-t="getApp">Coin ב-App Store</a>
+    </div>
+
+    <div id="state-recovery-app" hidden>
+      <div class="icon" aria-hidden="true">🔑</div>
+      <h1 data-t="recoveryAppTitle">איפוס סיסמה באפליקציה</h1>
+      <p data-t="recoveryAppBody">פתחו את Coin, הקישו "שכחת סיסמה?" במסך הכניסה, והזינו את הקוד בן 6 הספרות שנשלח אליכם במייל.</p>
+      <a class="btn btn-ghost store" href="#" data-t="getApp">Coin ב-App Store</a>
+    </div>
+
+    <div id="state-magic" hidden>
+      <div class="icon" aria-hidden="true">🔗</div>
+      <h1 data-t="magicTitle">כניסה לאפליקציה</h1>
+      <p id="magic-body" data-t="magicBodyNoApp">הקישור תקין. כדי להיכנס, פתחו את Coin באייפון והתחברו עם Apple או עם האימייל והסיסמה שלכם.</p>
+      <a class="btn open-app" id="magic-open" href="#" hidden data-t="openApp">פתיחת Coin</a>
+      <a class="btn btn-ghost store" href="#" data-t="getApp">Coin ב-App Store</a>
+    </div>
+
+    <div id="state-error" hidden>
+      <div class="icon" aria-hidden="true">⚠️</div>
+      <h1 data-t="errorTitle">הקישור אינו תקף</h1>
+      <p data-t="errorBody">ייתכן שהקישור פג תוקף או שכבר נעשה בו שימוש. חזרו לאפליקציה ובקשו קישור או קוד חדש.</p>
+      <p class="sub" id="error-detail"></p>
+      <a class="btn btn-ghost" href="/support.html" data-t="support">תמיכה</a>
+    </div>
+
+    <div id="state-none" hidden>
+      <div class="icon" aria-hidden="true">📧</div>
+      <h1 data-t="noneTitle">דף אימות החשבון</h1>
+      <p data-t="noneBody">הגעתם לדף זה ישירות. אימות אימייל ואיפוס סיסמה נפתחים מהקישור שנשלח אליכם במייל.</p>
+      <a class="btn btn-ghost store" href="#" data-t="getApp">Coin ב-App Store</a>
+    </div>
+
+    <div class="header-lang lang" role="group" aria-label="Language / שפה">
+      <button type="button" id="lang-he" aria-pressed="true" lang="he">עברית</button>
+      <button type="button" id="lang-en" aria-pressed="false" lang="en">English</button>
+    </div>
+    <a class="home" href="/">coins.erezults.com</a>
+  </main>
+
+  <script src="/auth/config.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    var STR = {
+      he: {
+        verifyingTitle: 'מאמתים…', verifyingBody: 'רק רגע, בודקים את הקישור.',
+        confirmedTitle: 'האימייל אומת!', confirmedBody: 'החשבון שלך מוכן. חזרו לאפליקציית Coin והתחברו.',
+        recoveryTitle: 'בחירת סיסמה חדשה', recoveryBody: 'הזינו סיסמה חדשה לחשבון Coin שלכם.',
+        newPasswordLabel: 'סיסמה חדשה', confirmPasswordLabel: 'אימות סיסמה',
+        passwordHint: 'לפחות 8 תווים, עם אות גדולה, אות קטנה, מספר ותו מיוחד.', setPassword: 'עדכון סיסמה',
+        recoveryDoneTitle: 'הסיסמה עודכנה!', recoveryDoneBody: 'חזרו לאפליקציית Coin והתחברו עם הסיסמה החדשה.',
+        recoveryAppTitle: 'איפוס סיסמה באפליקציה', recoveryAppBody: 'פתחו את Coin, הקישו "שכחת סיסמה?" במסך הכניסה, והזינו את הקוד בן 6 הספרות שנשלח אליכם במייל.',
+        magicTitle: 'כניסה לאפליקציה',
+        magicBodyNoApp: 'הקישור תקין. כדי להיכנס, פתחו את Coin באייפון והתחברו עם Apple או עם האימייל והסיסמה שלכם.',
+        magicBodyApp: 'הקישור תקין. הקישו כדי להמשיך באפליקציית Coin.',
+        errorTitle: 'הקישור אינו תקף', errorBody: 'ייתכן שהקישור פג תוקף או שכבר נעשה בו שימוש. חזרו לאפליקציה ובקשו קישור או קוד חדש.',
+        noneTitle: 'דף אימות החשבון', noneBody: 'הגעתם לדף זה ישירות. אימות אימייל ואיפוס סיסמה נפתחים מהקישור שנשלח אליכם במייל.',
+        openApp: 'פתיחת Coin', getApp: 'Coin ב-App Store', support: 'תמיכה',
+        errWeak: 'הסיסמה חייבת לכלול לפחות 8 תווים, אות גדולה, אות קטנה, מספר ותו מיוחד.',
+        errMismatch: 'הסיסמאות אינן תואמות.', updating: 'מעדכנים…', errGeneric: 'משהו השתבש. נסו שוב.'
+      },
+      en: {
+        verifyingTitle: 'Verifying…', verifyingBody: 'One moment — checking your link.',
+        confirmedTitle: 'Email confirmed!', confirmedBody: 'Your account is ready. Go back to the Coin app and sign in.',
+        recoveryTitle: 'Choose a new password', recoveryBody: 'Enter a new password for your Coin account.',
+        newPasswordLabel: 'New password', confirmPasswordLabel: 'Confirm password',
+        passwordHint: 'At least 8 characters, with an uppercase letter, a lowercase letter, a number and a symbol.', setPassword: 'Update password',
+        recoveryDoneTitle: 'Password updated!', recoveryDoneBody: 'Go back to the Coin app and sign in with your new password.',
+        recoveryAppTitle: 'Reset your password in the app', recoveryAppBody: 'Open Coin, tap "Forgot password?" on the sign-in screen, and enter the 6-digit code we emailed you.',
+        magicTitle: 'Sign in to the app',
+        magicBodyNoApp: 'Your link is valid. To sign in, open Coin on your iPhone and sign in with Apple or with your email and password.',
+        magicBodyApp: 'Your link is valid. Tap to continue in the Coin app.',
+        errorTitle: 'This link is invalid', errorBody: 'It may have expired or already been used. Go back to the app and request a new link or code.',
+        noneTitle: 'Account verification page', noneBody: 'You reached this page directly. Email confirmation and password reset open from the link we email you.',
+        openApp: 'Open Coin', getApp: 'Coin on the App Store', support: 'Support',
+        errWeak: 'Password needs at least 8 characters, an uppercase letter, a lowercase letter, a number and a symbol.',
+        errMismatch: 'Passwords do not match.', updating: 'Updating…', errGeneric: 'Something went wrong. Please try again.'
+      }
+    };
+    var CFG = window.COIN_AUTH_CONFIG || {};
+    var BASE = (CFG.SUPABASE_URL || '').replace(/\/$/, '');
+    var KEY = CFG.SUPABASE_ANON_KEY || '';
+    var configured = !!(BASE && KEY);
+    var lang = 'he';
+
+    function applyLang() {
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+      document.querySelectorAll('[data-t]').forEach(function (el) {
+        var k = el.getAttribute('data-t');
+        if (STR[lang][k]) el.textContent = STR[lang][k];
+      });
+      document.getElementById('lang-he').setAttribute('aria-pressed', String(lang === 'he'));
+      document.getElementById('lang-en').setAttribute('aria-pressed', String(lang === 'en'));
+    }
+    function setLang(l) { lang = l; try { localStorage.setItem('coin-lang', l); } catch (e) {} applyLang(); }
+    document.getElementById('lang-he').addEventListener('click', function () { setLang('he'); });
+    document.getElementById('lang-en').addEventListener('click', function () { setLang('en'); });
+
+    var STATES = ['state-loading', 'state-confirmed', 'state-recovery', 'state-recovery-done', 'state-recovery-app', 'state-magic', 'state-error', 'state-none'];
+    function show(id) { STATES.forEach(function (s) { document.getElementById(s).hidden = s !== id; }); }
+    function fail(detail) {
+      if (detail) document.getElementById('error-detail').textContent = detail;
+      show('state-error');
+    }
+    // Wipe tokens from the address bar so a refresh/share/history can't leak them.
+    function clearUrl() { try { history.replaceState(null, '', location.pathname); } catch (e) {} }
+
+    function api(path, method, body, token) {
+      var headers = { 'apikey': KEY, 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+      return fetch(BASE + '/auth/v1' + path, { method: method, headers: headers, body: body ? JSON.stringify(body) : undefined })
+        .then(function (r) {
+          return r.text().then(function (t) {
+            var j = {}; try { j = t ? JSON.parse(t) : {}; } catch (e) {}
+            if (!r.ok) throw new Error(j.msg || j.message || j.error_description || j.error || ('HTTP ' + r.status));
+            return j;
+          });
+        });
+    }
+
+    function strong(pw) {
+      return pw.length >= 8 && /[A-Z]/.test(pw) && /[a-z]/.test(pw) && /\d/.test(pw) && /[^A-Za-z0-9]/.test(pw);
+    }
+
+    function startRecovery(accessToken) {
+      show('state-recovery');
+      document.getElementById('pw1').focus();
+      document.getElementById('pw-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var btn = document.getElementById('set-password-btn');
+        var pw1 = document.getElementById('pw1').value;
+        var pw2 = document.getElementById('pw2').value;
+        var errEl = document.getElementById('recovery-err');
+        errEl.textContent = '';
+        if (!strong(pw1)) { errEl.textContent = STR[lang].errWeak; return; }
+        if (pw1 !== pw2) { errEl.textContent = STR[lang].errMismatch; return; }
+        btn.disabled = true; btn.textContent = STR[lang].updating;
+        api('/user', 'PUT', { password: pw1 }, accessToken)
+          .then(function () {
+            // End the one-off web session; the user signs in again in the app.
+            api('/logout?scope=local', 'POST', null, accessToken).catch(function () {});
+            show('state-recovery-done');
+          })
+          .catch(function (err) {
+            errEl.textContent = (err && err.message) || STR[lang].errGeneric;
+            btn.disabled = false; btn.textContent = STR[lang].setPassword;
+          });
+      });
+    }
+
+    function handleSession(type, accessToken, refreshToken) {
+      if (type === 'recovery') {
+        if (configured) startRecovery(accessToken); else show('state-recovery-app');
+        return;
+      }
+      if (type === 'magiclink') {
+        if (CFG.APP_SCHEME && accessToken) {
+          var a = document.getElementById('magic-open');
+          a.href = CFG.APP_SCHEME + '://auth/callback#access_token=' + encodeURIComponent(accessToken) +
+            '&refresh_token=' + encodeURIComponent(refreshToken || '') + '&type=magiclink';
+          var b = document.getElementById('magic-body');
+          b.setAttribute('data-t', 'magicBodyApp'); b.textContent = STR[lang].magicBodyApp;
+        }
+        show('state-magic');
+        return;
+      }
+      show('state-confirmed'); // signup / email / invite / email_change
+    }
+
+    // Language: saved choice → Hebrew browser → English.
+    var saved = null;
+    try { saved = localStorage.getItem('coin-lang'); } catch (e) {}
+    if (saved === 'he' || saved === 'en') lang = saved;
+    else if ((navigator.language || '').slice(0, 2).toLowerCase() !== 'he') lang = 'en';
+    applyLang();
+
+    if (CFG.APP_SCHEME) {
+      document.querySelectorAll('a.open-app').forEach(function (a) { a.hidden = false; if (a.id !== 'magic-open') a.href = CFG.APP_SCHEME + '://'; });
+    }
+    document.querySelectorAll('a.store').forEach(function (a) { a.href = CFG.APP_STORE_URL || 'https://apps.apple.com/app/id6759471186'; });
+
+    var hash = new URLSearchParams((location.hash || '').replace(/^#/, ''));
+    var query = new URLSearchParams(location.search || '');
+    var flow = query.get('flow'); // set by /auth/confirm|reset|magic-link relays
+    var errorCode = hash.get('error_code') || hash.get('error') || query.get('error_code') || query.get('error');
+    var errorDesc = hash.get('error_description') || query.get('error_description');
+    var type = hash.get('type') || query.get('type') || ({ confirm: 'signup', reset: 'recovery', 'magic-link': 'magiclink' })[flow] || null;
+    var accessToken = hash.get('access_token');
+    var refreshToken = hash.get('refresh_token');
+    var tokenHash = query.get('token_hash');
+    var code = query.get('code');
+    clearUrl();
+
+    if (errorCode) { fail(errorDesc ? errorDesc.replace(/\+/g, ' ') : ''); return; }
+
+    // Implicit flow: Supabase already verified the link and put a session in the hash.
+    if (accessToken) { handleSession(type, accessToken, refreshToken); return; }
+
+    // token_hash templates ({{ .TokenHash }}): verify here.
+    if (tokenHash) {
+      if (!configured) {
+        // Can't redeem without the project config — the in-app code path still works.
+        if (type === 'recovery') show('state-recovery-app'); else fail('');
+        return;
+      }
+      api('/verify', 'POST', { type: type || 'email', token_hash: tokenHash })
+        .then(function (s) { handleSession(type, s.access_token, s.refresh_token); })
+        .catch(function (err) { fail(err && err.message); });
+      return;
+    }
+
+    // PKCE ?code= can only be exchanged by the client that started the flow (the app).
+    if (code) {
+      if (CFG.APP_SCHEME) { location.href = CFG.APP_SCHEME + '://auth/callback?code=' + encodeURIComponent(code); return; }
+      fail('');
+      return;
+    }
+
+    show('state-none');
+  })();
+  </script>
+  <script src="/a11y.js" defer></script>
+</body>
+</html>
