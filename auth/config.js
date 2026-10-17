@@ -16,6 +16,6 @@
 window.COIN_AUTH_CONFIG = {
   SUPABASE_URL: '',
   SUPABASE_ANON_KEY: '',
-  APP_SCHEME: '',
+  APP_SCHEME: 'cointracklover',
   APP_STORE_URL: 'https://apps.apple.com/app/id6759471186'
 };
