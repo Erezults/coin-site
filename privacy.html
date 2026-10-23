@@ -81,7 +81,7 @@
 </ul>
 
 <h2>2. סריקת אישור רכישה ב-AI</h2>
-<p>רק כשאתם בוחרים לסרוק תמונה: התמונה נשלחת בחיבור מוצפן לפונקציית השרת שלנו, שמעבירה אותה דרך שער AI (כיום Lovable AI Gateway) למודל <strong>Google Gemini</strong>, לצורך חילוץ תאריך, סכום, מחיר, כמות, אסמכתא והערות. התוצאה מוצגת לכם לבדיקה ולעריכה לפני שמירה.</p>
+<p>רק כשאתם בוחרים לסרוק תמונה: התמונה נשלחת בחיבור מוצפן לפונקציית השרת שלנו, שמעבירה אותה דרך שער ה-AI של האפליקציה בצד השרת למודל <strong>Google Gemini</strong> (הנתונים אינם נמכרים, והתמונה מעובדת באופן חולף בלבד), לצורך חילוץ תאריך, סכום, מחיר, כמות, אסמכתא והערות. התוצאה מוצגת לכם לבדיקה ולעריכה לפני שמירה.</p>
 <div class="callout"><p><strong>התמונה לא נשמרת אצלנו</strong> — לא במסד הנתונים, לא באחסון קבצים ולא ביומנים. היא מעובדת רק לצורך אותה בקשה, ואינה משמשת לפרסום. נשמר רק מונה הסריקות החודשי. אפשר תמיד להזין רכישות ידנית בלי AI בכלל.</p></div>
 
 <h2>3. מחירי מטבעות</h2>
@@ -107,8 +107,7 @@
 <div class="table-wrap"><table>
   <thead><tr><th>ספק</th><th>תפקיד</th></tr></thead>
   <tbody>
-    <tr><td>Supabase</td><td>מסד נתונים, הזדהות ופונקציות שרת</td></tr>
-    <tr><td>Lovable (Lovable Cloud)</td><td>אירוח תשתית ה-Supabase של האפליקציה ושער ה-AI</td></tr>
+    <tr><td>Supabase</td><td>פרויקט ה-Supabase של האפליקציה עצמה, המאוחסן באיחוד האירופי (אירלנד): בסיס הנתונים, האימות והפונקציות בצד השרת</td></tr>
     <tr><td>Google (Gemini)</td><td>חילוץ נתונים מתמונה שבחרתם לסרוק</td></tr>
     <tr><td>CoinGecko</td><td>מחירי מטבעות (ללא פרטי חשבון)</td></tr>
     <tr><td>Sentry (אזור האיחוד האירופי, גרמניה)</td><td>דוחות קריסה ותקלות</td></tr>
@@ -190,7 +189,7 @@
 </ul>
 
 <h2>2. AI receipt scanning</h2>
-<p>Only when you choose to scan an image: the image is sent over an encrypted connection to our server function, which passes it through an AI gateway (currently Lovable AI Gateway) to a <strong>Google Gemini</strong> model to extract the date, amount, price, quantity, reference and notes. The result is shown to you to review and edit before saving.</p>
+<p>Only when you choose to scan an image: the image is sent over an encrypted connection to our server function, which passes it through the app's own server-side AI gateway to a <strong>Google Gemini</strong> model to extract the date, amount, price, quantity, reference and notes (no data is sold, and the image is processed transiently). The result is shown to you to review and edit before saving.</p>
 <div class="callout"><p><strong>We do not keep the image</strong> — not in the database, not in file storage and not in logs. It is processed only for that request and is never used for advertising. Only the monthly scan counter is stored. You can always enter purchases manually without AI.</p></div>
 
 <h2>3. Coin prices</h2>
@@ -216,8 +215,7 @@
 <div class="table-wrap"><table>
   <thead><tr><th>Provider</th><th>Role</th></tr></thead>
   <tbody>
-    <tr><td>Supabase</td><td>Database, authentication and server functions</td></tr>
-    <tr><td>Lovable (Lovable Cloud)</td><td>Hosting of the app's Supabase infrastructure and the AI gateway</td></tr>
+    <tr><td>Supabase</td><td>The app's own Supabase project, hosted in the EU (Ireland): database, authentication and server-side functions</td></tr>
     <tr><td>Google (Gemini)</td><td>Extracting data from an image you chose to scan</td></tr>
     <tr><td>CoinGecko</td><td>Coin prices (no account data)</td></tr>
     <tr><td>Sentry (EU region, Germany)</td><td>Crash and error reports</td></tr>
@@ -275,7 +273,7 @@
     <a href="/delete-account.html" data-he="מחיקת חשבון" data-en="Delete account">מחיקת חשבון</a>
     <a href="/accessibility.html" data-he="נגישות" data-en="Accessibility">נגישות</a>
     <a href="mailto:coins.support@erezults.com" data-he="צרו קשר" data-en="Contact">צרו קשר</a>
-    <a href="https://www.erezults.com">E-REZULTS</a>
+    <a href="https://erezults.com">E-REZULTS</a>
   </nav>
   <div class="footer-copy">&copy; 2026 E-REZULTS · Erez Cohen</div>
 </footer>
